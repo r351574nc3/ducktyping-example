@@ -15,6 +15,14 @@
  */
 package com.github.kualigan.ducktyping;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+
+import com.github.kualigan.ducktyping.api.Organization;
+import com.github.kualigan.ducktyping.api.OrganizationService;
+
 
 /**
  * Service implementation for looking up {@link Organization} over ReST or JAX-WS
@@ -32,7 +40,7 @@ public class OrganizationClient {
                                                             final Method method,
                                                             final Object[] args) throws Throwable {
                                            
-                                           
+                                           return null;
                                        }
                                    }
                 );
@@ -45,7 +53,7 @@ public class OrganizationClient {
                                                             final Method method,
                                                             final Object[] args) throws Throwable {
                                            
-                                           
+                                           return null;
                                        }
                                    }
                 );

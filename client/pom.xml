@@ -1,6 +1,6 @@
 <!--
 
-    Copyright 2005-2014 The Kuali Foundation
+    Copyright 2005-2013 The Kuali Foundation
 
     Licensed under the Educational Community License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,33 +16,23 @@
 
 -->
 
-<!--
-  Kuali Rice ArcheType Help
-
-  This is the main maven build file for the project as known as a project object model.
-  See the comments below to understand the major pieces of this pom. Where not commented,
-  see the maven documentation for more information.
--->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <name>The ducktyping-example Impl</name>
+  <name>ReST Client</name>
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.github.kualigan</groupId>
     <artifactId>ducktyping-example</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>ducktyping-example-impl</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>ducktyping-example-client</artifactId>
+  <packaging>war</packaging>
+
+  <properties>
+    <jaxb-impl.version>2.2.6</jaxb-impl.version>
+    <spring.version>3.1.0.RELEASE</spring.version>
+  </properties>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
     <!--
       To help manage complex builds, the maven enforcer plugin has many useful rules.
       This is not configured in this sample pom for simplicity sake.
@@ -57,6 +47,30 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>${plugin.compiler.version}</version>
+        <configuration>
+          <source>${plugin.compiler.source}</source>
+          <target>${plugin.compiler.target}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <!--
+        Using war overlays to extract the web content from the rice web module.
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${plugin.war.version}</version>
+        <configuration>
+          <overlays>
+            <overlay>
+              <groupId>org.kuali.rice</groupId>
+              <artifactId>rice-web</artifactId>
+              <filtered>false</filtered>
+            </overlay>
+          </overlays>
+        </configuration>
       </plugin>
 
       <!--
@@ -71,6 +85,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${plugin.build-helper.version}</version>
       </plugin>
 
       <!--
@@ -79,7 +94,37 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>${plugin.surefire.version}</version>
       </plugin>
+
+      <!--
+        This allows the application be be launched in a jetty server using a maven command.
+        A tomcat plugin could also be configured and used if desired.
+      -->
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${plugin.jetty.version}</version>
+        <configuration>
+          <webAppConfig>
+            <contextPath>/trnapp</contextPath>
+          </webAppConfig>
+          <connectors>
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <port>${jetty.port}</port>
+            </connector>
+          </connectors>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>${database.groupId}</groupId>
+            <artifactId>${database.artifactId}</artifactId>
+            <version>${database.version}</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -143,8 +188,7 @@
             <version>${plugin.jetty.version}</version>
             <configuration>
               <webAppConfig>
-                <contextPath>/ducktyping-example</contextPath>
-                <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+                <contextPath>/trnapp</contextPath>
               </webAppConfig>
               <connectors>
                 <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
@@ -207,133 +251,280 @@
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-core-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-core-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-core-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.glassfish.web</groupId>
+          <artifactId>jstl-impl</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-core-web</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- core service -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-core-service-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-core-service-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-core-service-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-core-service-web</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- edl -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-edl-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-edl-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- legacy rice impl module -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-kns</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- ken -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-ken-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <!-- kew -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-kew-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-kew-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-kew-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- kim (not including kim-ldap support) -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-kim-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-kim-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-kim-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- kns (not including legacy kns) -->
     <!-- krad -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-krad-app-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-krad-web-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <!-- krms -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-krms-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-krms-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-krms-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- ksb -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-ksb-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-ksb-client-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-ksb-server-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-ksb-web</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <!-- location -->
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-location-api</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-location-framework</artifactId>
+      <version>${rice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.kuali.rice</groupId>
       <artifactId>rice-location-impl</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-location-web</artifactId>
+      <version>${rice.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- web -->
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-web</artifactId>
+      <version>${rice.version}</version>
+      <type>war</type>
+    </dependency>
+
+    <!-- third party libraries -->
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>${jaxb-impl.version}</version>
+    </dependency>
+
+    <!-- third party libraries -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.github.kualigan</groupId>
-      <artifactId>ducktyping-example-model</artifactId>
-      <version>${project.version}</version>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kuali.rice</groupId>
+      <artifactId>rice-it-krad</artifactId>
+      <version>${rice.version}</version>
+    </dependency>
+
+        <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>7.5.1.v20110908</version>
+                <scope>test</scope>
+        </dependency>
+        <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>7.5.1.v20110908</version>
+                <scope>test</scope>
+        </dependency>
+    <dependency>
+      <groupId>com.github.kualigan</groupId>
+      <artifactId>ducktyping-example-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${database.groupId}</groupId>
+      <artifactId>${database.artifactId}</artifactId>
+      <version>${database.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

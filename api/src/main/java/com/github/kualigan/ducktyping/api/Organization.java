@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.kualigan.ducktyping;
+package com.github.kualigan.ducktyping.api;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,19 +30,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "id" })
-public class Organization {
+public interface Organization {
     @XmlElement
-    protected String id;
+    String getId();
     
-    public Organization(final String id) {
-        this.id = id;
-    }
+    void setId(final String id);
 
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getid() {
-        return id;
-    }
+    @XmlElement
+    String getName();
+    
+    void setName(final String name);
 }

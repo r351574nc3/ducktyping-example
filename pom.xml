@@ -443,9 +443,10 @@ finding these missing dependencies.
   </dependencyManagement>
   
   <modules>
-    <module>model</module>
     <module>api</module>
+    <module>model</module>
     <module>impl</module>
     <module>web</module>
+    <module>client</module>
   </modules>
 </project>

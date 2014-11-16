@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.kualigan.ducktyping;
-
-import com.github.kualigan.ducktyping.model.Organization;
+package com.github.kualigan.ducktyping.api;
 
 
 /**

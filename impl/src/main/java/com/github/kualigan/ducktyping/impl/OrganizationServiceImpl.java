@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.kualigan.ducktyping;
+package com.github.kualigan.ducktyping.impl;
 
-import com.github.kualigan.ducktyping.model.Organization;
+import com.github.kualigan.ducktyping.api.Organization;
+import com.github.kualigan.ducktyping.api.OrganizationService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -44,6 +45,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Organization getOrganization(@PathParam("id") final String organizationId) {
-        return new Organization(organizationId);
+        final Organization retval = new com.github.kualigan.ducktyping.model.Organization(organizationId);
+        retval.setName("Human Resources");
+        return retval;
     }
 }
