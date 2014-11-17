@@ -19,6 +19,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.kuali.rice.core.api.resourceloader.GlobalResourceLoader;
+import javax.xml.namespace.QName;
+
+
 
 import com.github.kualigan.ducktyping.api.Organization;
 import com.github.kualigan.ducktyping.api.OrganizationService;
@@ -31,31 +35,14 @@ import com.github.kualigan.ducktyping.api.OrganizationService;
  */
 public class OrganizationClient {
 
-    public void run() {
-        final OrganizationService orgService = (OrganizationService) 
-            Proxy.newProxyInstance(OrganizationService.class.getClassLoader(),
-                                   new Class[] { OrganizationService.class },
-                                   new InvocationHandler() {
-                                       public Object invoke(final Object proxy,
-                                                            final Method method,
-                                                            final Object[] args) throws Throwable {
-                                           
-                                           return null;
-                                       }
-                                   }
-                );
+    public Object run() {
+        final QName organizationServiceName = new QName("http://rice.kuali.org/", "organizationService");
+        final OrganizationService orgService = (OrganizationService) GlobalResourceLoader.getService(organizationServiceName);
 
-        final Organization org = (Organization) 
+        final Organization retval = (Organization) 
             Proxy.newProxyInstance(Organization.class.getClassLoader(),
-                                   new Class[] { Organization.class },
-                                   new InvocationHandler() {
-                                       public Object invoke(final Object proxy,
-                                                            final Method method,
-                                                            final Object[] args) throws Throwable {
-                                           
-                                           return null;
-                                       }
-                                   }
-                );
+                                   new Class[] { Organization.class }, new DucktypeInvocationHandler(orgService.getOrganization("12")));
+
+        return retval;
     }   
 }
