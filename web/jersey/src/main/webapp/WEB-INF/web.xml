@@ -37,6 +37,19 @@ This file contains custom application specific web.xml content.
     <param-value>classpath:com/github/kualigan/ducktyping/BootStrapSpringBeans.xml</param-value>
   </context-param>
 
+<!--
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+-->
+
+  <listener>
+	<listener-class>
+	  org.springframework.web.context.ContextLoaderListener
+	</listener-class>
+  </listener>
+
   <filter>
     <filter-name>DummyLoginFilter</filter-name>
     <filter-class>org.kuali.rice.krad.web.filter.DummyLoginFilter</filter-class>
@@ -332,7 +345,7 @@ This file contains custom application specific web.xml content.
 	<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 	<init-param>
 	  <param-name>com.sun.jersey.config.property.packages</param-name>
-	  <param-value>com.github.kualigan.ducktyping.rest</param-value>
+	  <param-value>com.github.kualigan.ducktyping.impl</param-value>
 	</init-param>
 	<load-on-startup>1</load-on-startup>
   </servlet>

@@ -48,7 +48,7 @@
     <mysql.jdbc.version>5.1.24</mysql.jdbc.version>
     <mysql.jdbc.artifactId>mysql-connector-java</mysql.jdbc.artifactId>
 
-    <rice.version>2.5.1</rice.version>
+    <rice.version>2.4.2</rice.version>
     <servlet-api.version>3.0.1</servlet-api.version>
 
     <!--plugin versions -->
