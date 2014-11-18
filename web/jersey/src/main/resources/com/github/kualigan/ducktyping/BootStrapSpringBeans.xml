@@ -95,7 +95,4 @@
 
   <!--an application specific service-->
   <bean id="productService" class="com.github.kualigan.ducktyping.MultiplicationProductServiceImpl" />
-
-  <bean id="organizationService" class="com.github.kualigan.ducktyping.impl.OrganizationServiceImpl" />
-
 </beans>

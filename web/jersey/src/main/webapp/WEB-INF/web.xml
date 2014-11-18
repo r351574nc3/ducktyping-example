@@ -37,13 +37,6 @@ This file contains custom application specific web.xml content.
     <param-value>classpath:com/github/kualigan/ducktyping/BootStrapSpringBeans.xml</param-value>
   </context-param>
 
-<!--
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:applicationContext.xml</param-value>
-  </context-param>
--->
-
   <listener>
 	<listener-class>
 	  org.springframework.web.context.ContextLoaderListener

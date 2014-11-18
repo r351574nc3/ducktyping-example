@@ -29,7 +29,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.github.kualigan</groupId>
-    <artifactId>ducktyping-example</artifactId>
+    <artifactId>ducktyping-example-web</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>ducktyping-example-ksb</artifactId>

@@ -56,38 +56,38 @@
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<!--
-		Kuali Rice ArcheType Help
+    <!--
+        Kuali Rice ArcheType Help
 
-		This is the bootstrap Spring file loads the Kuali Rice Configuration such as transaction
-		managers, datasources and the Rice Configurer.
-		
+        This is the bootstrap Spring file loads the Kuali Rice Configuration such as transaction
+        managers, datasources and the Rice Configurer.
+        
     Project Spring Beans can be placed at the end of this file.
 
     Also notice this Spring file loads the internal BootStrapConfig.xml file.
     Properties in this file can be referenced in this file using Spring's
     property replacement mechanism.
-	-->
+    -->
 
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="properties" value="#{bootstrapConfig.properties}" />
-	</bean>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" value="#{bootstrapConfig.properties}" />
+    </bean>
 
-	<bean id="bootstrapConfig" class="org.kuali.rice.core.impl.config.property.ConfigFactoryBean">
-		<property name="configLocations">
-			<list>
-				<value>classpath:com/github/kualigan/ducktyping/BootStrapConfig.xml</value>
-			</list>
-		</property>
-	</bean>
-	
-	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="staticMethod" value="org.kuali.rice.core.impl.config.property.ConfigInitializer.initialize" />
-		<property name="arguments">
-			<list><ref bean="bootstrapConfig"/></list>
-		</property>
-	</bean>
+    <bean id="bootstrapConfig" class="org.kuali.rice.core.impl.config.property.ConfigFactoryBean">
+        <property name="configLocations">
+            <list>
+                <value>classpath:com/github/kualigan/ducktyping/BootStrapConfig.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.kuali.rice.core.impl.config.property.ConfigInitializer.initialize" />
+        <property name="arguments">
+            <list><ref bean="bootstrapConfig"/></list>
+        </property>
+    </bean>
 
   <import resource="classpath:org/kuali/rice/core/RiceJTASpringBeans.xml"/>
   <import resource="classpath:org/kuali/rice/core/RiceDataSourceSpringBeans.xml"/>
@@ -95,5 +95,28 @@
 
   <!--an application specific service-->
   <bean id="productService" class="com.github.kualigan.ducktyping.MultiplicationProductServiceImpl" />
+
+  <bean id="rice.ksb.serviceBus"
+        class="org.kuali.rice.core.framework.resourceloader.GlobalResourceLoaderServiceFactoryBean">
+    <property name="serviceName" value="rice.ksb.serviceBus" />
+  </bean>
+  
+  <bean id="organizationService" class="com.github.kualigan.ducktyping.impl.OrganizationServiceImpl" />
+
+  <bean id="jsonOrganizationService" class="com.github.kualigan.ducktyping.rest.JsonOrganizationService" />
+  
+  <bean id="OrganizationService" class="org.kuali.rice.ksb.api.bus.support.RestServiceDefinition">
+    <property name="serviceNameSpaceURI" value="KUALI"/>
+    <property name="service" ref="jsonOrganizationService"/>
+    <property name="resourceClass"
+              value="jsonOrganizationService"/>
+    <property name="localServiceName" value="jsonOrganizationService"/>
+  </bean>
+    
+    
+  <bean class="org.kuali.rice.ksb.api.bus.support.ServiceBusExporter">
+    <property name="serviceBus" ref="rice.ksb.serviceBus"/>
+    <property name="serviceDefinition" ref="OrganizationService"/>
+  </bean>  
 
 </beans>
