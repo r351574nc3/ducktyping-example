@@ -18,33 +18,16 @@ package com.github.kualigan.ducktyping.impl;
 import com.github.kualigan.ducktyping.api.Organization;
 import com.github.kualigan.ducktyping.api.OrganizationService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
 
 /**
  * Service implementation for looking up {@link Organization} over ReST or JAX-WS
  *
  * @author Leo Przybylski
  */
-@Path("/Organizations")
-@Produces(MediaType.APPLICATION_JSON)
 public class OrganizationServiceImpl implements OrganizationService {
 
-    
-    @GET
-    @Path("/get/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Organization getOrganization(@PathParam("id") final String organizationId) {
+    @Override
+    public Organization getOrganization(final String organizationId) {
         final Organization retval = new com.github.kualigan.ducktyping.model.Organization(organizationId);
         retval.setName("Human Resources");
         return retval;

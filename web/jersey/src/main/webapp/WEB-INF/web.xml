@@ -345,8 +345,12 @@ This file contains custom application specific web.xml content.
 	<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 	<init-param>
 	  <param-name>com.sun.jersey.config.property.packages</param-name>
-	  <param-value>com.github.kualigan.ducktyping.impl</param-value>
+	  <param-value>com.github.kualigan.ducktyping.rest</param-value>
 	</init-param>
+    <init-param>
+      <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+      <param-value>true</param-value>
+    </init-param>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   
